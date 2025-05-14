@@ -2,6 +2,7 @@ import jsdoc from '../../doc.json';
 // import { javascriptLanguage } from '@codemirror/lang-javascript';
 import { autocompletion } from '@codemirror/autocomplete';
 import { h } from './html';
+import { snippetsAutocomplete } from './snippetsAutocomplete.mjs';
 
 function plaintext(str) {
   const div = document.createElement('div');
@@ -77,8 +78,9 @@ export const strudelAutocomplete = (context /* : CompletionContext */) => {
 export function isAutoCompletionEnabled(on) {
   return on
     ? [
-        autocompletion({ override: [strudelAutocomplete] }),
-        //javascriptLanguage.data.of({ autocomplete: strudelAutocomplete }),
+        autocompletion({
+          override: [strudelAutocomplete, snippetsAutocomplete],
+        }),
       ]
-    : []; // autocompletion({ override: [] })
+    : [];
 }
