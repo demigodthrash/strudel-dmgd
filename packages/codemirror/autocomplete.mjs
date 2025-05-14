@@ -17,7 +17,7 @@ const getInnerText = (html) => {
 };
 
 export function Autocomplete({ doc, label }) {
-  return h`<div class="prose dark:prose-invert max-h-[400px] overflow-auto p-2">
+  return h`<div id="autodoc" class="prose dark:prose-invert max-h-[400px] overflow-auto p-2">
 <h1 class="pt-0 mt-0">${label || getDocLabel(doc)}</h1>
 ${doc.description}
 <ul>

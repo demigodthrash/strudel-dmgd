@@ -69,3 +69,44 @@
   text-decoration: underline 0.18rem;
   text-underline-offset: 0.22rem;
 }
+
+
+/* Tambahkan di akhir file website/src/repl/Repl.css */  
+#code .cm-scroller::-webkit-scrollbar, .cm-tooltip-autocomplete::-webkit-scrollbar{  
+  width: 0.5rem !important; /* w-2 */  
+}  
+  
+#code .cm-scroller::-webkit-scrollbar-track, .cm-tooltip-autocomplete::-webkit-scrollbar-track{  
+  background-color: #f3f4f6 !important; /* bg-gray-100 */  
+}  
+  
+#code .cm-scroller::-webkit-scrollbar-thumb, .cm-tooltip-autocomplete::-webkit-scrollbar-thumb{  
+  background-color: #d1d5db !important; /* bg-gray-300 */  
+}  
+  
+.dark #code .cm-scroller::-webkit-scrollbar-track, .cm-tooltip-autocomplete::-webkit-scrollbar-track{  
+  background-color: #000000 !important; /* bg-neutral-700 */  
+}  
+  
+.dark #code .cm-scroller::-webkit-scrollbar-thumb, .cm-tooltip-autocomplete::-webkit-scrollbar-thumb{  
+  background-color: #2e2e2e !important; /* bg-neutral-500 */  
+}
+
+/* Sembunyikan bagian info tooltip auto-completion */  
+#autodoc {  
+  display: none !important;  
+}
+
+.cm-tooltip-autocomplete,
+.cm-tooltip-autocomplete * {
+  /* Menyembunyikan scrollbar di browser berbasis WebKit (Chrome, Safari, Edge baru) */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Menyembunyikan scrollbar di Firefox */
+  scrollbar-width: none;
+
+  /* Untuk browser lain yang mendukung -ms- (IE/Edge lama) */
+  -ms-overflow-style: none;
+}
