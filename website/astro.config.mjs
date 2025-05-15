@@ -141,4 +141,7 @@ export default defineConfig({
       // external: ['fraction.js'], // https://github.com/infusion/Fraction.js/issues/51
     },
   },
+  devToolbar: {
+    enabled: false,
+  },
 });
