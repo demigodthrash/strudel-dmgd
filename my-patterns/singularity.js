@@ -4,11 +4,14 @@
 @license CC BY-NC-SA  
 */  
   
-setcpm(143)  
+setcpm(143) 
+samples('local:')
+
   
 // Fungsi helper untuk membuat pola dasar  
-const Pat4 = (sample) => s(sample).chop(4*4).loopat(4)._punchcard()
-const Pat8 = (sample) => s(sample).chop(8*4).loopat(8)._punchcard()   
+const Pat1 = (sample) => s(sample).chop(1*4).loopat(4)._punchcard()
+const Pat2 = (sample) => s(sample).chop(8*4).loopat(8)._punchcard()
+const Pat16 = (sample) => s(sample).chop((16*4)*4).loopat(16*4)._punchcard()
   
 // Fungsi untuk menerapkan efek reverb  
 const applyReverb = (pattern, roomVal = 0.7) => pattern  
@@ -30,45 +33,30 @@ const applyFilter = (pattern, lpfVal = 1500) => pattern
   .lpq(slider(14, 0, 50, 1))  
   
 // Membuat pola-pola dengan konfigurasi yang berbeda  
-stack(  
+stack( 
+  // s("casio"),
   // Kick  
-  Pat4("singularity:2").postgain(slider(0, 0, 1, 0.01)),  
-    
+  Pat1("kick:0")
+  .euclidrot(9,24,1)
+  .slow(8)
+  .cut(1)
+  .postgain(slider(1, 0, 1, 0.01)),
+  Pat1("kick:1/4*3 kick:1/4*6").postgain(slider(0.58, 0, 1, 0.01)),
+  Pat1("kick:2/4*6").postgain(slider(0.49, 0, 1, 0.01)),
+  // Atmos 
+  Pat1("atmos:0/4*.24").postgain(slider(1, 0, 1, 0.01)),
+  Pat1("atmos:1/4*6").postgain(slider(1, 0, 1, 0.01)),
+
+  
   // Rumble (dengan efek lengkap)  
   applyFilter(  
     applyReverb(  
       applyDelay(
-        Pat4("singularity:2")
+        Pat16("singularity:2")
       )  
     )  
   ).postgain(slider(0.38, 0, 1, .01)),  
-    
-  // Kick groove  
-  Pat4("singularity:3").postgain(slider(1, 0, 1, .01)),  
-    
-  // Kick move  
-  Pat4("singularity:4").postgain(slider(1, 0, 1, .01)),  
-    
-  // Marker (dimatikan)  
-  Pat4("singularity:5").postgain(slider(0, 0, 1, 0.01)),  
-    
-  // Noise  
-  Pat4("singularity:6").postgain(slider(0.48, 0, 1, .01)),  
-    
-  // Perc  
-  Pat4("singularity:7").postgain(slider(0.98, 0, 1, .01)),  
-    
-  // Rev
-  Pat8("singularity:8").postgain(slider(0, 0, 1, 0.01)),  
-    
-  // Poly  
-  Pat4("singularity:9").postgain(slider(0.57, 0, 1, 0.01)),  
-    
-  // Atmos  
-  Pat4("singularity:10").postgain(slider(1, 0, 1, 0.01)),  
-    
-  // Bass  
-  Pat4("singularity:11").postgain(slider(1, 0, 1, 0.01))  
+     
 )  
 // Efek global yang dikomentari  
 // .coarse("<1 4 8 16 32>")  
@@ -77,5 +65,5 @@ stack(
 // .phaser(2).phaserdepth("<0 .5 .75 1>")  
 // .compressor("-16:20:10:.002:.02")  
 // .adsr(".1:.1:.5:.2")  
-.gain(slider(0.51, 0, 1, 0.01))  
+.gain(slider(1, 0, 1, 0.01))  
 .scope()
