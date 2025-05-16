@@ -110,3 +110,69 @@
   /* Untuk browser lain yang mendukung -ms- (IE/Edge lama) */
   -ms-overflow-style: none;
 }
+
+
+input[type="range"] {
+  -webkit-appearance: none; /* Remove default styling for WebKit browsers */
+  width: 64px;
+  margin-right: 4px;
+  transform: translateY(4px);
+  background: transparent; /* Make default background transparent */
+}
+
+/* Track styling for WebKit browsers (Chrome, Safari, Edge) */
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  background: #ccc; /* Track color */
+  border-radius: 2px;
+}
+
+/* Thumb styling for WebKit browsers */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #ff0000; /* Thumb color (e.g., blue) */
+  border-radius: 50%;
+  margin-top: -6px; /* Center thumb on track */
+  cursor: pointer;
+}
+
+/* Track styling for Firefox */
+input[type="range"]::-moz-range-track {
+  height: 4px;
+  background: #ccc; /* Track color */
+  border-radius: 2px;
+}
+
+/* Thumb styling for Firefox */
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: #ff0000; /* Thumb color */
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Track styling for IE/Edge */
+input[type="range"]::-ms-track {
+  height: 4px;
+  background: #ccc; /* Track color */
+  border-radius: 2px;
+  color: transparent; /* Hide default track */
+}
+
+/* Thumb styling for IE/Edge */
+input[type="range"]::-ms-thumb {
+  width: 16px;
+  height: 16px;
+  background: #ff0000; /* Thumb color */
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* Focus state for accessibility */
+input[type="range"]:focus {
+  outline: none;
+}
