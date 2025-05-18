@@ -59,7 +59,7 @@ export function Header({ context, embedded = false }) {
 
   // Update posisi musik
   const updateMusicPosition = useCallback((cyclePosition) => {
-    const totalSixteenths = cyclePosition * 4;
+    const totalSixteenths = cyclePosition * 16;
     const bars = Math.floor(totalSixteenths / 16) + 1;
     const remainingSixteenths = totalSixteenths % 16;
     const beats = Math.floor(remainingSixteenths / 4) + 1;
@@ -141,7 +141,7 @@ export function Header({ context, embedded = false }) {
                 TIME: {formatTime(currentTime)} | PLAY: {formatDuration(playTime)}
               </span>
               <span className="text-sm font-medium">
-                | CPS: {currentCps.toFixed(2)} | CPM: {currentCpm.toFixed(2)}
+                | CPS: {currentCps.toFixed(2)} | CPM: {currentCpm.toFixed(2)} | BPM: {currentCps*240} 
               </span>
               <span className="text-sm font-medium">| Position: {formatMusicPosition(musicPosition)}</span>
               {!isEmbedded && isButtonRowHidden && (

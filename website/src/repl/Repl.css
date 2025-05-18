@@ -176,3 +176,11 @@ input[type="range"]::-ms-thumb {
 input[type="range"]:focus {
   outline: none;
 }
+
+#code .cm-cursorLayer {
+    color: white;
+}
+
+.ͼ4e.cm-focused .cm-selectionBackground, .ͼ4e .cm-line::selection, .ͼ4e .cm-selectionLayer .cm-selectionBackground, .ͼ4e .cm-content ::selection {
+    background: rgb(35, 0, 0) !important;
+}

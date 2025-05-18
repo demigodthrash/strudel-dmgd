@@ -1,20 +1,20 @@
 #!/usr/bin/env node
 
-import cowsay from 'cowsay';
-import { createReadStream, existsSync } from 'fs';
-import { readdir } from 'fs/promises';
-import http from 'http';
-import { join, sep } from 'path';
-import os from 'os';
+import cowsay from "cowsay";
+import { createReadStream, existsSync } from "fs";
+import { readdir } from "fs/promises";
+import http from "http";
+import { join, sep } from "path";
+import os from "os";
 
 // eslint-disable-next-line
 const LOG = !!process.env.LOG || false;
 
 console.log(
   cowsay.say({
-    text: 'welcome to @strudel/sampler',
-    e: 'oO',
-    T: 'U ',
+    text: "welcome to @strudel/sampler ☠️DEMIGOD☠️",
+    e: "oO",
+    T: "U ",
   }),
 );
 
@@ -24,13 +24,15 @@ async function getFilesInDirectory(directory) {
   for (const dirent of dirents) {
     const fullPath = join(directory, dirent.name);
     if (dirent.isDirectory()) {
-      if (dirent.name.startsWith('.')) {
+      if (dirent.name.startsWith(".")) {
         LOG && console.warn(`ignore hidden folder: ${fullPath}`);
         continue;
       }
       try {
         const subFiles = (await getFilesInDirectory(fullPath)).filter((f) =>
-          ['wav', 'mp3', 'ogg'].includes(f.split('.').slice(-1)[0].toLowerCase()),
+          ["wav", "mp3", "ogg"].includes(
+            f.split(".").slice(-1)[0].toLowerCase(),
+          ),
         );
         files = files.concat(subFiles);
         LOG && console.log(`${dirent.name} (${subFiles.length})`);
@@ -47,15 +49,41 @@ async function getFilesInDirectory(directory) {
 async function getBanks(directory) {
   let files = await getFilesInDirectory(directory);
   let banks = {};
-  directory = directory.split(sep).join('/');
+  directory = directory.split(sep).join("/");
+
   files = files.map((path) => {
-    path = path.split(sep).join('/');
-    const [bank] = path.split('/').slice(-2);
-    banks[bank] = banks[bank] || [];
-    const relativeUrl = path.replace(directory, '');
-    banks[bank].push(relativeUrl);
+    path = path.split(sep).join("/");
+    const pathParts = path.split("/");
+    const bank = pathParts[pathParts.length - 2]; // Get folder name
+    const fileName = pathParts[pathParts.length - 1]; // Get file name
+    const relativeUrl = path.replace(directory, "");
+
+    // Check if folder ends with [dw]
+    const isDwFolder = /\[dw\]$/.test(bank);
+    let bankKey = bank;
+
+    if (isDwFolder) {
+      // Remove [dw] from bank name
+      bankKey = bank.replace(/\s*\[dw\]$/, "").trim();
+
+      // Extract note from filename (e.g., A#3 from Acid V [dw]_A#3_127.wav)
+      const noteMatch = fileName.match(/_([A-G][#b]?\d)(?:_\d+)?\./);
+      if (noteMatch) {
+        const note = noteMatch[1].toLowerCase(); // Convert to lowercase (e.g., A#3 -> a#3)
+        banks[bankKey] = banks[bankKey] || {};
+        banks[bankKey][note] = relativeUrl;
+      } else {
+        LOG && console.warn(`Could not parse note from filename: ${fileName}`);
+      }
+    } else {
+      // Non-[dw] folders use the original structure
+      banks[bankKey] = banks[bankKey] || [];
+      banks[bankKey].push(relativeUrl); // Fixed typo from .007push to .push
+    }
+
     return relativeUrl;
   });
+
   banks._base = `http://localhost:5432`;
   return { banks, files };
 }
@@ -63,26 +91,26 @@ async function getBanks(directory) {
 // eslint-disable-next-line
 const directory = process.cwd();
 const server = http.createServer(async (req, res) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader("Access-Control-Allow-Origin", "*");
   const { banks, files } = await getBanks(directory);
-  if (req.url === '/') {
-    res.setHeader('Content-Type', 'application/json');
+  if (req.url === "/") {
+    res.setHeader("Content-Type", "application/json");
     return res.end(JSON.stringify(banks));
   }
   let subpath = decodeURIComponent(req.url);
-  const filePath = join(directory, subpath.split('/').join(sep));
+  const filePath = join(directory, subpath.split("/").join(sep));
 
-  //console.log('GET:', filePath);
+  //console.log('ие:', filePath);
   const isFound = existsSync(filePath);
   if (!isFound) {
     res.statusCode = 404;
-    res.end('File not found');
+    res.end("File not found");
     return;
   }
   const readStream = createReadStream(filePath);
-  readStream.on('error', (err) => {
+  readStream.on("error", (err) => {
     res.statusCode = 500;
-    res.end('Internal server error');
+    res.end("Internal server error");
     console.error(err);
   });
   readStream.pipe(res);
@@ -90,13 +118,13 @@ const server = http.createServer(async (req, res) => {
 
 // eslint-disable-next-line
 const PORT = process.env.PORT || 5432;
-const IP_ADDRESS = '0.0.0.0';
+const IP_ADDRESS = "0.0.0.0";
 let IP;
 const networkInterfaces = os.networkInterfaces();
 
 Object.keys(networkInterfaces).forEach((key) => {
   networkInterfaces[key].forEach((networkInterface) => {
-    if (networkInterface.family === 'IPv4' && !networkInterface.internal) {
+    if (networkInterface.family === "IPv4" && !networkInterface.internal) {
       IP = networkInterface.address;
     }
   });
