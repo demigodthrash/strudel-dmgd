@@ -2,8 +2,8 @@
 let tempo = 100;
 let cl = tempo / 60 / 4;
 setcps(cl);
-
 samples('local:');
+
 $: stack(
   s('casio:0 casio:1 casio:1 casio:1').gain(0.5).color('red'),
   // s("speach:0").clip(10).stretch(1/10).loopAt(10), // sample 10 bar one shot
