@@ -45,3 +45,5 @@ $: note('<[g3,b3,e4]!2 [a3,c3,e4] [b3,d3,f#4]>')
   .cutoff('<1000 2000 4000>')
   .fast(4)
   ._scope();
+
+$: sound("white*24").gain(square.range(0,1).fast(rand))._scope()
