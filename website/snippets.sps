@@ -93,3 +93,13 @@ $: n("<x*4 x*4 x(5,8,2) x*4 x(5,8,2) x*4 x*8 x(6,8,5)>")
   .s("kick:0")
   .velocity(".7 .6 .8 .9")
 // --
+
+// key: dm:marker
+// --
+  .firstOf(16, x=>x.rev())  
+// --
+
+// key: dm:reverse
+// --
+  .lastOf(16, x=>x.rev())
+// --

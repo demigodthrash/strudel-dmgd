@@ -52,3 +52,5 @@ There is a #strudel channel on the TidalCycles discord: <https://discord.com/inv
 You can also ask questions and find related discussions on the tidal club forum: <https://club.tidalcycles.org/>
 
 The discord and forum is shared with the haskell (tidal) and python (vortex) siblings of this project.
+
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/demigodthrash/strudel-dmgd)
