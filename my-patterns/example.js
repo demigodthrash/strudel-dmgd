@@ -46,4 +46,16 @@ $: note('<[g3,b3,e4]!2 [a3,c3,e4] [b3,d3,f#4]>')
   .fast(4)
   ._scope();
 
-$: sound("white*24").gain(square.range(0,1).fast(rand))._scope()
+$: sound('white*24').gain(square.range(0, 1).fast(rand))._scope();
+
+$: n('<x*4!3 x*8 x(3,8)*2!3 x(6,6,0)*2!1 >').s('bd'); //sequence
+$: s('<bass:0*4>').decay(2); //one shot
+$: s('bass:0') //loop
+  .chop(16 * 4)
+  .loopat(16)
+  .cps(cl)
+  .hush();
+$: s('atmos:0') //loop
+  .chop(1 * 4)
+  .loopat(1)
+  .cps(cl);

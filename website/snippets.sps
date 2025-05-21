@@ -103,3 +103,21 @@ $: n("<x*4 x*4 x(5,8,2) x*4 x(5,8,2) x*4 x*8 x(6,8,5)>")
 // --
   .lastOf(16, x=>x.rev())
 // --
+
+// key: dm:one shot
+// --
+$: s("<bass:0*4>").decay(2)
+// --
+
+// key: dm:sequence
+// --
+$: n("<x*4!3 x*8 x(3,8)*2!3 x(6,6,0)*2!1 >").s("bd")
+// --
+
+// key: dm:loop
+// --
+$: s("sample")
+  .chop(16*4)
+  .loopat(16)
+  .cps(cl)
+// --
