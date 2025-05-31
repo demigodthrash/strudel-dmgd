@@ -423,6 +423,7 @@ export const { loopEnd, loope } = registerControl('loopEnd', 'loope');
  */
 // ['clhatdecay'],
 export const { crush } = registerControl('crush');
+export const { dmgcrush } = registerControl('dmgcrush');
 /**
  * fake-resampling for lowering the sample rate. Caution: This effect seems to only work in chromium based browsers
  *

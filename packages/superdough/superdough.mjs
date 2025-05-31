@@ -499,6 +499,7 @@ export const superdough = async (value, t, hapDuration) => {
     //
     coarse,
     crush,
+    dmgcrush,
     shape,
     shapevol = getDefaultValue('shapevol'),
     distort,
@@ -671,6 +672,7 @@ export const superdough = async (value, t, hapDuration) => {
   // effects
   coarse !== undefined && chain.push(getWorklet(ac, 'coarse-processor', { coarse }));
   crush !== undefined && chain.push(getWorklet(ac, 'crush-processor', { crush }));
+  dmgcrush !== undefined && chain.push(getWorklet(ac, 'dm-crush-processor', { dmgcrush }));
   shape !== undefined && chain.push(getWorklet(ac, 'shape-processor', { shape, postgain: shapevol }));
   distort !== undefined && chain.push(getWorklet(ac, 'distort-processor', { distort, postgain: distortvol }));
 

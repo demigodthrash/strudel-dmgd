@@ -761,3 +761,126 @@ class PulseOscillatorProcessor extends AudioWorkletProcessor {
 }
 
 registerProcessor('pulse-oscillator', PulseOscillatorProcessor);
+
+
+
+// -----------------------custom
+
+class DmCrushProcessor extends AudioWorkletProcessor {  
+  static get parameterDescriptors() {  
+    return [  
+      {  
+        name: 'dmgcrush',  
+        defaultValue: 0,  
+        minValue: 0,  
+        maxValue: 1,  
+        automationRate: 'k-rate'  
+      }  
+    ];  
+  }  
+  
+  constructor(options) {  
+    super(options);  
+    this.started = false; // Flag untuk mendeteksi input pertama  
+    this._lastHeldSample = [];  
+    this._currentFrameInHoldPeriod = 0;  
+    this._channelCount = 0;  
+    this._initialized = false;  
+  }  
+  
+  _initializeChannels(channelCount) {  
+    if (this._channelCount !== channelCount || !this._initialized) {  
+      this._channelCount = channelCount;  
+      this._lastHeldSample = new Array(channelCount).fill(0.0);  
+      this._initialized = true;  
+    }  
+  }  
+  
+  process(inputs, outputs, parameters) {  
+    const input = inputs[0];  
+    const output = outputs[0];  
+  
+    // Implementasi pola started flag seperti processor lain  
+    const hasInput = !(input[0] === undefined);  
+    if (this.started && !hasInput) {  
+      return false; // Stop processor ketika input hilang  
+    }  
+    this.started = hasInput;  
+  
+    if (!input || !output || input.length === 0) {  
+      if (output && output.length > 0) {  
+        for (let i = 0; i < output.length; i++) {  
+          if (output[i]) {  
+            output[i].fill(0.0);  
+          }  
+        }  
+      }  
+      return true;  
+    }  
+  
+    this._initializeChannels(input.length);  
+  
+    const dmgcrush = parameters.dmgcrush[0];  
+  
+    // Validasi parameter  
+    if (!isFinite(dmgcrush)) {  
+      for (let ch = 0; ch < this._channelCount; ch++) {  
+        if (output[ch]) {  
+          output[ch].fill(0.0);  
+        }  
+      }  
+      return true;  
+    }  
+  
+    const MAX_HOLD_SAMPLES = 64;   
+    const MIN_QUANTIZATION_BITS = 1;  
+    const MAX_QUANTIZATION_BITS = 16;  
+  
+    const freq1SamplesToHold = Math.max(1, Math.floor(1 + dmgcrush * (MAX_HOLD_SAMPLES - 1)));  
+    const freq2_3QuantizationBits = Math.max(MIN_QUANTIZATION_BITS, Math.floor(MAX_QUANTIZATION_BITS - dmgcrush * (MAX_QUANTIZATION_BITS - MIN_QUANTIZATION_BITS)));  
+      
+    const quantizationMultiplier = Math.pow(2, freq2_3QuantizationBits - 1);  
+  
+    // Gunakan blockSize global untuk konsistensi  
+    const numberOfFrames = input[0] ? Math.min(input[0].length, blockSize) : 0;  
+    if (numberOfFrames === 0) {  
+      for (let ch = 0; ch < this._channelCount; ch++) {  
+        if (output[ch]) output[ch].fill(0.0);  
+      }  
+      return true;  
+    }  
+  
+    // Loop structure yang dioptimalkan mengikuti pola CoarseProcessor  
+    for (let n = 0; n < numberOfFrames; n++) {  
+      if (this._currentFrameInHoldPeriod === 0) {  
+        // Update held samples untuk semua channel sekaligus  
+        for (let i = 0; i < this._channelCount; i++) {  
+          if (input[i] && input[i][n] !== undefined) {  
+            const currentSample = input[i][n];  
+            if (isFinite(currentSample)) {  
+              this._lastHeldSample[i] = Math.round(currentSample * quantizationMultiplier) / quantizationMultiplier;  
+            } else {  
+              this._lastHeldSample[i] = 0.0;  
+            }  
+          } else {  
+            this._lastHeldSample[i] = 0.0;  
+          }  
+        }  
+      }  
+  
+      // Output untuk semua channel  
+      for (let i = 0; i < this._channelCount; i++) {  
+        if (output[i] && n < output[i].length) {  
+          output[i][n] = this._lastHeldSample[i];  
+        }  
+      }  
+        
+      this._currentFrameInHoldPeriod = (this._currentFrameInHoldPeriod + 1) % freq1SamplesToHold;  
+    }  
+      
+    return true;  
+  }  
+}  
+  
+registerProcessor('dm-crush-processor', DmCrushProcessor);
+
